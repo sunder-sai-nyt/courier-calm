@@ -6,35 +6,43 @@
 <title>Courier Calm</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  *::before, *::after { display: none !important; content: none !important; }
-  html, body { height: 100%; width: 100%; overflow-x: hidden; }
+  html, body { height: 100%; }
   body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     background: #0f0f0f;
     color: #e0e0e0;
-    display: block;
     text-align: center;
     padding: 24px 16px;
   }
   h1 { font-size: 1.6rem; font-weight: 700; letter-spacing: -0.5px; margin-bottom: 8px; color: #fff; }
-  .subtitle { font-size: 0.85rem; color: #777; margin-bottom: 12px; }
-  .status { font-size: 0.8rem; color: #4ecdc4; margin-bottom: 32px; }
-  .panic-btn {
+  .subtitle { font-size: 0.85rem; color: #777; margin-bottom: 40px; }
+
+  #toggle { display: none; }
+
+  .panic-label {
+    display: inline-block;
     width: 200px;
     height: 200px;
     border-radius: 50%;
-    border: none;
     background: radial-gradient(circle at 40% 40%, #ff6b6b, #c0392b);
     color: #fff;
     font-size: 1.2rem;
     font-weight: 700;
+    line-height: 200px;
+    text-align: center;
     cursor: pointer;
     box-shadow: 0 0 40px rgba(192, 57, 43, 0.4);
-    line-height: 1.3;
-    display: inline-block;
+    user-select: none;
   }
-  .panic-btn:active { transform: scale(0.95); box-shadow: 0 0 20px rgba(192, 57, 43, 0.6); }
-  .back-btn {
+  .panic-label span {
+    display: inline-block;
+    vertical-align: middle;
+    line-height: 1.3;
+  }
+  .panic-label:active { transform: scale(0.95); box-shadow: 0 0 20px rgba(192, 57, 43, 0.6); }
+
+  .back-label {
+    display: inline-block;
     background: none;
     border: 1px solid #333;
     color: #888;
@@ -43,10 +51,16 @@
     border-radius: 20px;
     cursor: pointer;
     margin-bottom: 24px;
-    display: inline-block;
+    user-select: none;
   }
-  .back-btn:active { border-color: #666; }
-  .hidden { display: none !important; }
+  .back-label:active { border-color: #666; }
+
+  .start-view { display: block; }
+  .cards-view { display: none; }
+
+  #toggle:checked ~ .start-view { display: none; }
+  #toggle:checked ~ .cards-view { display: block; }
+
   .cards {
     width: 100%;
     max-width: 420px;
@@ -84,33 +98,21 @@
     border-radius: 8px;
   }
   .breathe { font-size: 0.8rem; color: #555; margin-top: 24px; text-align: center; }
-  #debug-box {
-    position: fixed;
-    bottom: 8px;
-    right: 8px;
-    background: rgba(255,0,0,0.85);
-    color: #fff;
-    font-size: 0.7rem;
-    font-family: monospace;
-    padding: 6px 10px;
-    border-radius: 6px;
-    z-index: 99999;
-    cursor: pointer;
-  }
 </style>
 </head>
 <body>
 
 <h1>Courier Calm</h1>
 <p class="subtitle">Your shift safety companion</p>
-<p class="status" id="status">Status: Loading...</p>
 
-<div id="start-view">
-  <button type="button" class="panic-btn" id="panic-btn">I'm<br>overwhelmed</button>
+<input type="checkbox" id="toggle">
+
+<div class="start-view">
+  <label class="panic-label" for="toggle"><span>I'm<br>overwhelmed</span></label>
 </div>
 
-<div id="cards-view" class="hidden">
-  <button type="button" class="back-btn" id="back-btn">&larr; I'm feeling better</button>
+<div class="cards-view">
+  <label class="back-label" for="toggle">&larr; I'm feeling better</label>
   <div class="cards">
     <div class="card">
       <div class="card-icon">&#x1F6BB;</div>
@@ -144,62 +146,6 @@
   </div>
   <p class="breathe">Breathe. You've got this.</p>
 </div>
-
-<div id="debug-box">Clicks: 0</div>
-
-<script>
-  document.addEventListener("DOMContentLoaded", function() {
-    var panicBtn = document.getElementById("panic-btn");
-    var backBtn = document.getElementById("back-btn");
-    var startView = document.getElementById("start-view");
-    var cardsView = document.getElementById("cards-view");
-    var status = document.getElementById("status");
-    var debugBox = document.getElementById("debug-box");
-    var clickCount = 0;
-
-    status.textContent = "Status: Ready";
-    console.log("[CourierCalm] DOM ready, handlers attached");
-
-    // Global click counter
-    document.addEventListener("click", function(e) {
-      clickCount++;
-      debugBox.textContent = "Clicks: " + clickCount + " | " + e.target.tagName + "#" + (e.target.id || "?");
-      console.log("[Debug] click #" + clickCount + " on", e.target.tagName, e.target.id, e.target.className);
-    }, true);
-
-    panicBtn.addEventListener("click", function() {
-      console.log("[CourierCalm] panic-btn clicked");
-      startView.classList.add("hidden");
-      cardsView.classList.remove("hidden");
-      status.textContent = "Status: Support loaded";
-    });
-
-    backBtn.addEventListener("click", function() {
-      console.log("[CourierCalm] back-btn clicked");
-      cardsView.classList.add("hidden");
-      startView.classList.remove("hidden");
-      status.textContent = "Status: Reset";
-    });
-
-    // Forensic: outline any positioned elements with z-index > 1
-    var all = document.querySelectorAll("*");
-    var flagged = [];
-    for (var i = 0; i < all.length; i++) {
-      var s = window.getComputedStyle(all[i]);
-      var pos = s.getPropertyValue("position");
-      var z = parseInt(s.getPropertyValue("z-index"), 10);
-      if ((pos === "fixed" || pos === "absolute") && z > 1 && all[i].id !== "debug-box") {
-        all[i].style.outline = "3px solid red";
-        flagged.push(all[i].tagName + "#" + (all[i].id || "?") + " z:" + z + " pos:" + pos);
-      }
-    }
-    if (flagged.length) {
-      console.warn("[Debug] Flagged overlapping elements:", flagged);
-    } else {
-      console.log("[Debug] No suspicious positioned overlays found");
-    }
-  });
-</script>
 
 </body>
 </html>
