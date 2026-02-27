@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Courier Calm</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #0f0f0f;
+    color: #e0e0e0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 24px 16px;
+    -webkit-tap-highlight-color: transparent;
+  }
+  h1 {
+    font-size: 1.6rem;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    margin-bottom: 8px;
+    color: #ffffff;
+  }
+  .subtitle {
+    font-size: 0.85rem;
+    color: #777;
+    margin-bottom: 40px;
+  }
+  #panic-btn {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    border: none;
+    background: radial-gradient(circle at 40% 40%, #ff6b6b, #c0392b);
+    color: #fff;
+    font-size: 1.2rem;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 0 40px rgba(192, 57, 43, 0.4);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    line-height: 1.3;
+  }
+  #panic-btn:active {
+    transform: scale(0.95);
+    box-shadow: 0 0 20px rgba(192, 57, 43, 0.6);
+  }
+  #panic-btn.hidden { display: none; }
+  #back-btn {
+    background: none;
+    border: 1px solid #333;
+    color: #888;
+    font-size: 0.85rem;
+    padding: 10px 24px;
+    border-radius: 20px;
+    cursor: pointer;
+    margin-bottom: 24px;
+    transition: border-color 0.2s;
+  }
+  #back-btn:active { border-color: #666; }
+  #back-btn.hidden { display: none; }
+  .cards { width: 100%; max-width: 420px; display: flex; flex-direction: column; gap: 12px; }
+  .card {
+    background: #1a1a1a;
+    border: 1px solid #2a2a2a;
+    border-radius: 16px;
+    padding: 20px;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: slideUp 0.35s ease forwards;
+  }
+  .card:nth-child(1) { animation-delay: 0.05s; }
+  .card:nth-child(2) { animation-delay: 0.12s; }
+  .card:nth-child(3) { animation-delay: 0.19s; }
+  .card:nth-child(4) { animation-delay: 0.26s; }
+  .card:nth-child(5) { animation-delay: 0.33s; }
+  @keyframes slideUp {
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .card-icon { font-size: 1.8rem; margin-bottom: 8px; }
+  .card-title { font-size: 1rem; font-weight: 600; color: #fff; margin-bottom: 4px; }
+  .card-detail { font-size: 0.85rem; color: #999; line-height: 1.4; }
+  .card-distance {
+    display: inline-block;
+    margin-top: 8px;
+    font-size: 0.75rem;
+    color: #4ecdc4;
+    background: rgba(78, 205, 196, 0.1);
+    padding: 4px 10px;
+    border-radius: 8px;
+  }
+  .breathe-text {
+    font-size: 0.8rem;
+    color: #555;
+    margin-top: 32px;
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+
+<h1>Courier Calm</h1>
+<p class="subtitle">Your shift safety companion</p>
+
+<button id="panic-btn" onclick="showCards()">I'm<br>overwhelmed</button>
+
+<button id="back-btn" class="hidden" onclick="reset()">← I'm feeling better</button>
+
+<div id="cards" class="cards"></div>
+
+<script>
+const data = [
+  {
+    icon: "🚻",
+    title: "Nearest Bathroom",
+    detail: "Starbucks — 340 Market St. Open restroom, no purchase needed.",
+    distance: "0.2 mi away"
+  },
+  {
+    icon: "🔋",
+    title: "Charging Hub",
+    detail: "FedEx Office — 455 Mission St. Free outlets & USB ports inside.",
+    distance: "0.4 mi away"
+  },
+  {
+    icon: "🧘",
+    title: "Quiet Zone",
+    detail: "Yerba Buena Gardens — Howard St. Benches, shade, low foot traffic right now.",
+    distance: "0.3 mi away"
+  },
+  {
+    icon: "🅿️",
+    title: "Safe Parking Area",
+    detail: "5th & Mission Garage — well-lit, security cameras, bike rack on level 1.",
+    distance: "0.5 mi away"
+  },
+  {
+    icon: "🛡️",
+    title: "Theft Awareness Tip",
+    detail: "Lock your vehicle every stop. Keep valuables in a closed bag. If threatened, don't resist — report to 311.",
+    distance: null
+  }
+];
+
+function showCards() {
+  document.getElementById("panic-btn").classList.add("hidden");
+  document.getElementById("back-btn").classList.remove("hidden");
+  const container = document.getElementById("cards");
+  container.innerHTML = data.map(c => `
+    <div class="card">
+      <div class="card-icon">${c.icon}</div>
+      <div class="card-title">${c.title}</div>
+      <div class="card-detail">${c.detail}</div>
+      ${c.distance ? `<span class="card-distance">📍 ${c.distance}</span>` : ""}
+    </div>
+  `).join("") + `<p class="breathe-text">Breathe. You've got this.</p>`;
+}
+
+function reset() {
+  document.getElementById("cards").innerHTML = "";
+  document.getElementById("back-btn").classList.add("hidden");
+  document.getElementById("panic-btn").classList.remove("hidden");
+}
+</script>
+
+</body>
+</html>

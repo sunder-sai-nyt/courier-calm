@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Courier Calm</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { height: 100%; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #0f0f0f;
+    color: #e0e0e0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 24px 16px;
+    -webkit-tap-highlight-color: transparent;
+  }
+  h1 { font-size: 1.6rem; font-weight: 700; letter-spacing: -0.5px; margin-bottom: 8px; color: #fff; }
+  .subtitle { font-size: 0.85rem; color: #777; margin-bottom: 12px; }
+  .status { font-size: 0.8rem; color: #4ecdc4; margin-bottom: 32px; }
+  .panic-btn {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    border: none;
+    background: radial-gradient(circle at 40% 40%, #ff6b6b, #c0392b);
+    color: #fff;
+    font-size: 1.2rem;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 0 40px rgba(192, 57, 43, 0.4);
+    line-height: 1.3;
+    -webkit-appearance: none;
+    appearance: none;
+    touch-action: manipulation;
+    position: relative;
+    z-index: 2;
+  }
+  .panic-btn:active { transform: scale(0.95); box-shadow: 0 0 20px rgba(192, 57, 43, 0.6); }
+  .back-btn {
+    background: none;
+    border: 1px solid #333;
+    color: #888;
+    font-size: 0.85rem;
+    padding: 10px 24px;
+    border-radius: 20px;
+    cursor: pointer;
+    margin-bottom: 24px;
+    -webkit-appearance: none;
+    appearance: none;
+    touch-action: manipulation;
+    position: relative;
+    z-index: 2;
+  }
+  .back-btn:active { border-color: #666; }
+  .hidden { display: none !important; }
+  .cards { width: 100%; max-width: 420px; display: flex; flex-direction: column; gap: 12px; }
+  .card {
+    background: #1a1a1a;
+    border: 1px solid #2a2a2a;
+    border-radius: 16px;
+    padding: 20px;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: slideUp 0.35s ease forwards;
+  }
+  .card:nth-child(1) { animation-delay: 0.05s; }
+  .card:nth-child(2) { animation-delay: 0.12s; }
+  .card:nth-child(3) { animation-delay: 0.19s; }
+  .card:nth-child(4) { animation-delay: 0.26s; }
+  .card:nth-child(5) { animation-delay: 0.33s; }
+  @keyframes slideUp { to { opacity: 1; transform: translateY(0); } }
+  .card-icon { font-size: 1.8rem; margin-bottom: 8px; }
+  .card-title { font-size: 1rem; font-weight: 600; color: #fff; margin-bottom: 4px; }
+  .card-detail { font-size: 0.85rem; color: #999; line-height: 1.4; }
+  .card-distance {
+    display: inline-block;
+    margin-top: 8px;
+    font-size: 0.75rem;
+    color: #4ecdc4;
+    background: rgba(78, 205, 196, 0.1);
+    padding: 4px 10px;
+    border-radius: 8px;
+  }
+  .breathe { font-size: 0.8rem; color: #555; margin-top: 24px; text-align: center; }
+</style>
+</head>
+<body>
+
+<h1>Courier Calm</h1>
+<p class="subtitle">Your shift safety companion</p>
+<p class="status" id="status">Status: Loading...</p>
+
+<div id="start-view">
+  <button type="button" class="panic-btn" id="panic-btn">I'm<br>overwhelmed</button>
+</div>
+
+<div id="cards-view" class="hidden">
+  <button type="button" class="back-btn" id="back-btn">&larr; I'm feeling better</button>
+  <div class="cards">
+    <div class="card">
+      <div class="card-icon">&#x1F6BB;</div>
+      <div class="card-title">Nearest Bathroom</div>
+      <div class="card-detail">Starbucks — 340 Market St. Open restroom, no purchase needed.</div>
+      <span class="card-distance">&#x1F4CD; 0.2 mi away</span>
+    </div>
+    <div class="card">
+      <div class="card-icon">&#x1F50B;</div>
+      <div class="card-title">Charging Hub</div>
+      <div class="card-detail">FedEx Office — 455 Mission St. Free outlets &amp; USB ports inside.</div>
+      <span class="card-distance">&#x1F4CD; 0.4 mi away</span>
+    </div>
+    <div class="card">
+      <div class="card-icon">&#x1F9D8;</div>
+      <div class="card-title">Quiet Zone</div>
+      <div class="card-detail">Yerba Buena Gardens — Howard St. Benches, shade, low foot traffic right now.</div>
+      <span class="card-distance">&#x1F4CD; 0.3 mi away</span>
+    </div>
+    <div class="card">
+      <div class="card-icon">&#x1F17F;&#xFE0F;</div>
+      <div class="card-title">Safe Parking Area</div>
+      <div class="card-detail">5th &amp; Mission Garage — well-lit, security cameras, bike rack on level 1.</div>
+      <span class="card-distance">&#x1F4CD; 0.5 mi away</span>
+    </div>
+    <div class="card">
+      <div class="card-icon">&#x1F6E1;&#xFE0F;</div>
+      <div class="card-title">Theft Awareness Tip</div>
+      <div class="card-detail">Lock your vehicle every stop. Keep valuables in a closed bag. If threatened, don't resist — report to 311.</div>
+    </div>
+  </div>
+  <p class="breathe">Breathe. You've got this.</p>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    var panicBtn = document.getElementById("panic-btn");
+    var backBtn = document.getElementById("back-btn");
+    var startView = document.getElementById("start-view");
+    var cardsView = document.getElementById("cards-view");
+    var status = document.getElementById("status");
+
+    status.textContent = "Status: Ready";
+    console.log("[CourierCalm] DOM ready, handlers attached");
+
+    panicBtn.addEventListener("click", function() {
+      console.log("[CourierCalm] panic-btn clicked");
+      startView.classList.add("hidden");
+      cardsView.classList.remove("hidden");
+      status.textContent = "Status: Support loaded";
+    });
+
+    backBtn.addEventListener("click", function() {
+      console.log("[CourierCalm] back-btn clicked");
+      cardsView.classList.add("hidden");
+      startView.classList.remove("hidden");
+      status.textContent = "Status: Reset";
+    });
+  });
+</script>
+
+</body>
+</html>
